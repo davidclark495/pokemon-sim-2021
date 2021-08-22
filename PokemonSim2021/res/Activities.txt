@@ -1,0 +1,52 @@
+This file outlines what activities (e.g. fighting, shopping) should be in the game. 
+// It presents a reasonable sequence for encountering important activities, such as booting-up the game.
+
+
+
+Boot-up game:
+
+New Game | Load Game 
+
+--> 
+
+(Start New Game) | (Place Menu)
+
+--------------------
+
+Start New Game:
+
+What is your name? --> _______
+
+--> 
+
+(Place Menu)
+
+--------------------
+
+Place Menu:
+
+explore | travel | more
+
+--> 
+
+explore:
+
+(wild) | (wild + trainer) | (shop) | (center)
+
+-----
+
+travel:
+
+(travel)
+
+-----
+
+more: 
+
+current location | party | bag | options | save | quit
+
+--> 
+
+
+
+-----

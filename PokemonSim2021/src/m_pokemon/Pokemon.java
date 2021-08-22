@@ -47,6 +47,16 @@ public class Pokemon {
 		this.name = name;
 		this.type = type;
 	}
+	
+	/**
+	 * Create a clone of the given Pokemon.
+	 * 
+	 * @param clone
+	 */
+	public Pokemon(Pokemon clone) {
+		this.name = clone.name;
+		this.type = clone.type;
+	}
 
 
 
