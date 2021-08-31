@@ -20,11 +20,10 @@ public abstract class Activity {
 	public abstract Result startActivity();
 	
 	//public abstract HashMap<Option, String> getOptions();
-	public abstract ArrayList<Option> getOptions();
+	public abstract OptionBlock getOptions();
 	
-	public abstract void selectOption(Option selection);
+	public abstract String selectOption(Option selection);
 	
-	public abstract Result getResult();
 	
 	
 	
@@ -67,16 +66,38 @@ public abstract class Activity {
 	}
 	
 	/**
-	 * Contains text and other display information.
+	 * Contains a method for updating the model/getting narration.
+	 * May contain display information.
+	 * 
+	 * Contains sequencing / game-flow information.
 	 * May contain another activity, which should be completed before resuming.
+	 * May contain another OptionBlock.
+	 * May trigger the end of the Activity.
 	 * 
 	 * @author davidclark
 	 */
 	public class Result {
 
+		// defaults to null
+		public OptionBlock nextOptBlock = null;		
+		// may be null
+		public Activity nextActivity = null;
+		// True if this result is the end of the activity
+		public boolean finalMessage = false;
+
 		//
-		public Runnable modelUpdate; 
+		public Updater updater; 
+	}
+	
+	/**
+	 * used to update the model in a Result
+	 * 
+	 * @author davidclark
+	 *
+	 */
+	public interface Updater{
 		/**
+		 * Narration markup style:
 		 *  e.g. 
 		 *  "Charmander used flamethrower.\n
 		 *  <delay : short> 
@@ -87,20 +108,20 @@ public abstract class Activity {
 		 *  Charmander gained 30 exp.
 		 *  <wait-for-input:any>"
 		 */
-		public String narration;
-		// may be null
-		public Activity nextActivity;
-		
-		// True if this result is the end of the activity
-		public boolean finalMessage = false;
-	}
-	
-	public interface Runnable{
-		void run(String input);
+		// update the model and return a bit of narration
+		// may return null
+		String updateModel(String input);
 	}
 
+	/**
+	 * provides a way of returning options + a prompt/context for making a choice
+	 * 
+	 * @author davidclark
+	 *
+	 */
 	public class OptionBlock{
-		ArrayList<Option> options;
+		public String prompt;
+		public ArrayList<Option> options;
 	}
 	
 }

@@ -26,11 +26,21 @@ public class GameModel {
 	Stack<Activity> activityStack;
 	
 	public GameModel() {
+		/// set up the player ///
 		player = new Player(",,,");
+		
+		// set up the trainer
 		Trainer trainer = player.getTrainer();
-		Pokemon starterPokemon = PokemonList.getPokemon("Eevee");
-		starterPokemon.teachMove(MoveList.getMove("Tackle"));
-		trainer.addPokemonToParty(starterPokemon);
+		
+		// set up the trainer's party
+		Pokemon poke1 = PokemonList.getPokemon("Eevee");
+		poke1.teachMove(MoveList.getMove("Tackle"));
+		trainer.addPokemonToParty(poke1);
+		
+		Pokemon poke2 = PokemonList.getPokemon("Charmander");
+		poke2.teachMove(MoveList.getMove("Ember"));
+		poke2.teachMove(MoveList.getMove("Flame Wheel"));
+		trainer.addPokemonToParty(poke2);
 	}
 	
 	public Player getPlayer() {

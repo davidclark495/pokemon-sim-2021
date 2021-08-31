@@ -63,6 +63,14 @@ public class Trainer {
 		return party.get(0);
 	}
 	
+	/**
+	 * Returns an ArrayList of all Pokemon in the Trainer's party.
+	 * @return
+	 */
+	public ArrayList<Pokemon> getParty(){
+		return party;
+	}
+	
 	
 	
 	///// Mutators ///// 

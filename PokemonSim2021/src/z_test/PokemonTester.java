@@ -235,6 +235,8 @@ public class PokemonTester {
 		assertTrue(pokemon.getKnownMoves().isEmpty());
 	}
 
+	
+	///// Test Stats /////
 
 
 }

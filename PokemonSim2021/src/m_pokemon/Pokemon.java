@@ -12,15 +12,44 @@ public class Pokemon {
 
 	public static final int MAX_NUM_MOVES = 4;
 
-	// The Pokemon's type
+	// The species' type
 	private Type type;
-	// The species name
+	// The species' name
 	private String name;
 	// The individual's nickname
 	private String nickname;
-
+	
 	// The Pokemon's list of attacks/moves
 	private ArrayList<Move> knownMoves = new ArrayList<Move>();
+	
+	// stats related info
+	// The species' base stats
+	// should be Final
+	/**
+	 * hp
+	 * atk
+	 * def
+	 */
+	private StatBlock baseStats;
+	// The individual's persistent stats
+	// Can be leveled-up, never go down
+	/**
+	 * hp
+	 * atk
+	 * def
+	 */
+	private StatBlock stats;
+	
+	// The individual's battle-related temporary stats
+	// calculated based on circumstances such as Effects
+	private StatBlock battleStats;
+	
+	//
+	private int maxHP;
+	private int level;
+	private ArrayList<Effect> activeEffects;
+	
+	
 
 
 
@@ -147,6 +176,120 @@ public class Pokemon {
 	public ArrayList<Move> getKnownMoves(){
 		return knownMoves;
 	}
+	
+	
+	
+	//////////////////////////////
+	
+	///// Inner Class /////
 
+	//////////////////////////////
 
+	/**
+	 * Tracks all of this Pokemon's stats across four main categories.
+	 * - base stats
+	 *   : stats shared by all pokemon of a given species
+	 * - persistent stats
+	 *   : the individual's current stats at the current level 
+	 *   : (these shouldn't go down)
+	 *   : these increase when the pokemon levels-up, 
+	 *     and the increase may be less than a full point
+	 * - temporary/effective stats
+	 *   : these should be reset/recalculated at the start of battles
+	 *     and when the pokemon gets a new Effect
+	 *   : determined by persistent stats + any ongoing Effects
+	 * - battle reward stats
+	 *   : drops... these matter to the pokemon that faints this one
+	 *   : gains... used to calculate exp. gained, stat increases, etc.
+	 * @author davidclark
+	 * Date: 08/22/21
+	 */
+	private class StatBlock {
+		
+		// base stats
+		private int baseHP, baseAtk, baseDef;
+		// persistent stats
+		private double maxHP, hp;
+		private double atk, def;
+		private int level, xp, nextLevelXP;
+		// temp/effective stats
+		private int tempAtk, tempDef;
+		private double accuracy, evasion;
+		// battle reward stats : gains
+		private int hpEVsGained, atkEVsGained, defEVsGained;
+		// battle reward stats : drops
+		private int hpEVsDropped, atkEVsDropped, defEVsDropped;
+		private int expReward;
+		
+		/**
+		 * Initialize the StatBlock with the provided base stats 
+		 * and derive persistent stats
+		 * @param baseHP
+		 * @param baseAtk
+		 * @param baseDef
+		 * @param level
+		 */
+		public StatBlock(int baseHP, int baseAtk, int baseDef, int level){
+			this.baseHP = baseHP;
+			this.baseAtk = baseAtk;
+			this.baseDef = baseDef;
+			
+			this.level = 1;
+			this.hp = 10;
+			this.atk = 5;
+			this.def = 5;
+			
+			while(level < level) {
+				levelUp();
+			}
+		}
+		
+		///// Misc. Functionality /////
+		/**
+		 * Increase the Pokemon's level and adjust stats.
+		 * - xp is reset to 0
+		 * - nextLevelXP is increased
+		 * - persistent stats are increased w/ regard to base stats
+		 * - persistent stats are increased w/ regard to EVs gained
+		 */
+		public void levelUp() {
+			//// adjust level/exp. stats ////
+			level++;
+			xp = 0;
+			nextLevelXP *= 1.2;
+			
+			//// adjust persistent stats ////
+			// improve w/ level 
+			maxHP += baseHP/50.0;
+			hp += baseHP/50.0;
+			atk += baseAtk/50.0;
+			def += baseDef/50.0;
+			// improve w/ EVs (+ reset EVs gained)
+			maxHP += hpEVsGained/100.0;
+			hp += hpEVsGained/100.0;
+			atk += atkEVsGained/100.0;
+			def += defEVsGained/100.0;
+			hpEVsGained = 0;
+			atkEVsGained = 0;
+			defEVsGained = 0;
+		}
+		
+		///// Accessors /////
+		public int getHP() {
+			return (int)hp;
+		}
+		
+		public int getMaxHP() {
+			return (int)maxHP;
+		}
+		
+		public int getAtk() {
+			return (int)atk;
+		}
+		
+		public int getDef() {
+			return (int)def;
+		}
+	}
+	
 }

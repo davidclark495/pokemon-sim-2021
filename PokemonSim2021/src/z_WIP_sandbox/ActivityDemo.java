@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import m_game.*;
 import m_game.Activity.Option;
+import m_game.Activity.OptionBlock;
 import m_pokemon.Pokemon;
 
 /**
@@ -25,58 +26,145 @@ public class ActivityDemo {
 		Scanner reader = new Scanner(System.in);
 
 		// model (activity) set up
-		ExampleActivity battleAct = new ExampleActivity(model); 
+		BattleActivity battleAct = new BattleActivity(model); 
+
+
 
 		// begin game
 		battleAct.startActivity();	
 
+		// begin activity loop
 
-		ArrayList<Option> options = battleAct.getOptions();
+		while(!battleAct.isFinalResultSent()) {
 
-		boolean validOptionSelected = false; 
-		do {
-			// view
-			displayOptions(options);
-			String choice = reader.next();
-			
-			// controller.parseChoice()
-			validOptionSelected = parseChoice(choice, options, battleAct);
-		} while(!validOptionSelected);
+
+			OptionBlock currentOptionBlock = battleAct.getOptions();
+
+			// make a selection
+			Option selectedOption = null; 
+			while(selectedOption == null) {
+				// view
+				displayOptions(currentOptionBlock);
+				String choice = reader.next();
+				//String choice = reader.next();
+				System.out.println();
+
+				// controller.parseChoice()
+				selectedOption = parseChoice(choice, currentOptionBlock.options);
+
+				if(selectedOption == null) {
+					System.out.println("<-- Option not found. --> \n"
+							+ "<-- Please choose one of the labeled options. -->\n");
+				}
+			}
+
+			String narration = battleAct.selectOption(selectedOption);
+
+			displayNarration(narration);
+		}
+
 
 	}
 
+
+	//////////////////////////////
+
+	///// VC Helper Methods /////
+
+	//////////////////////////////
+
+
 	/**
-	 * Print all of the options IDs and descriptions in some sensible way
+	 * View
+	 * 
+	 * Print the prompt
+	 * and all of the options' IDs and descriptions in some sensible way
 	 * @param options
 	 */
-	private static void displayOptions(ArrayList<Option> options) {
-		for(Option opt : options) {
+	private static void displayOptions(OptionBlock optionBlock) {
+		// print divider
+		{
+			String divider = "---------------";
+			System.out.println(divider);
+		}
+		// print prompt
+		{
+			String message = optionBlock.prompt;
+			System.out.println(message);
+		}
+		// print options
+		for(Option opt : optionBlock.options) {
 			String message = String.format("%s - %s", 
 					opt.getID(), opt.getDescription());
 			System.out.println(message);
 		}
+		// print option-receiver text
+		// e.g. 
+		// your choice: 
+		System.out.println();
+		System.out.print("Your choice: ");
+	}
+
+	/**
+	 * View
+	 * 
+	 * Print any narration/String
+	 * (should be coming from a result)
+	 * 
+	 * @param options
+	 */
+	private static void displayNarration(String narration) {
+		// if narration is null, don't display anything
+		if(narration == null)
+			return;
+
+		// print short divider
+		{
+			String divider = "- - - - -\n";
+			System.out.println(divider);
+		}
+		// print message
+		String message = narration;
+		System.out.println(message + "\n");
+	}
+
+	/**
+	 * View
+	 * 
+	 * Print a bunch of newline characters
+	 */
+	private static void clearConsole() {
+		for(int i = 0; i < 20; i++)
+			System.out.println();
 	}
 
 	/**
 	 * Take an input string and see if it matches one of the options' ID variables.
-	 * If a match is found, notify the Activity of the choice and return true.
-	 * Otherwise return false so that a new choice can be made.
+	 * If a match is found, return the matching option.
+	 * Otherwise return null.
+	 * 
+	 * Ignores case.
 	 * 
 	 * @param choice A string that may represent one of the options' IDs
 	 * @param options A list of options
-	 * @param activity The activity to notify if a match/choice is found
 	 */
-	private static boolean parseChoice(String choice, ArrayList<Option> options, Activity activity) {
+	private static Option parseChoice(String choice, ArrayList<Option> options) {
+		// hopefully find the match
 		for(Option opt : options) {
-			if(choice.equals(opt.getID())) {
-				activity.selectOption(opt);
-				return true;
+			if(choice.equalsIgnoreCase(opt.getID())) {
+				return opt;
 			}
 		}
-		return false;
+		// no match was found
+		return null;
 	}
 
-	private class ActivityResponder implements ExampleActivity.Responder{
+
+	///// Misc. /////
+
+	// wip
+	// handle activity/model events that require text input
+	private class ActivityResponder implements BattleActivity.Responder{
 
 		Scanner reader = new Scanner(System.in);
 
@@ -90,88 +178,5 @@ public class ActivityDemo {
 
 
 
-	private static class ExampleActivity extends Activity{
 
-		// tracks the state of the world (player/trainer/pokemon)
-		private GameModel model;
-
-		// tracks the state of the activity
-		ArrayList<Option> currentOptions;
-
-		// 
-		Result currentResult;
-
-
-
-		public ExampleActivity(GameModel model) {
-			super(model);
-			this.model = model;
-		}
-
-
-
-
-
-
-		// load the initial options
-		@Override
-		public Result startActivity() {
-			currentOptions = new ArrayList<Option>();
-
-			// opt 1
-			Option opt1 = new Option("1", "Fight", new Result());
-			Result res1 = opt1.getResult();
-			res1.modelUpdate = (String selection) -> {
-				Pokemon poke = model.getPlayer().getTrainer().getFirstPokemon();
-				poke.setNickname("...oooooOOOooooo...spooooky");
-			};
-			res1.narration = String.format("%s's nickname was changed. ", 
-					model.getPlayer().getTrainer().getFirstPokemon().getNickname());
-			// opt 2
-			Option opt2 = new Option("2", "Bag", new Result());
-			// opt 3
-			Option opt3 = new Option("3", "Team", new Result());
-			// opt 4
-			Option opt4 = new Option("4", "Run", new Result());
-
-			currentOptions.add(opt1);
-			currentOptions.add(opt2);
-			currentOptions.add(opt3);
-			currentOptions.add(opt4);
-
-			return null;
-		}
-
-		@Override
-		public ArrayList<Option> getOptions() {
-			return currentOptions;
-		}
-
-		@Override
-		public void selectOption(Option selection) {
-			Result result = selection.getResult();
-
-			// update the model as needed
-			result.modelUpdate.run(null);
-		}
-
-		@Override
-		public Result getResult() {
-			return currentResult;
-		}
-
-
-
-		// event stuff
-		private ArrayList<Responder> allResponders;
-
-		public interface Responder {
-			void giveInput(String input);
-		}
-
-		public void addListener(Responder responder) {
-			allResponders.add(responder);
-		}
-
-	}
 }

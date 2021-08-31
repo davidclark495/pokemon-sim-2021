@@ -30,6 +30,7 @@ public class PokemonList {
 	// NORMAL
 	private static Pokemon eevee = new Pokemon("Eevee", Type.NORMAL);
 	// FIRE
+	private static Pokemon charmander = new Pokemon("Charmander", Type.FIRE);
 	// WATER
 	// GRASS
 	// OTHER
@@ -38,6 +39,7 @@ public class PokemonList {
 		// NORMAL
 		addPokemonToMap(eevee);
 		// FIRE
+		addPokemonToMap(charmander);
 		// WATER
 		// GRASS
 		// OTHER
