@@ -2,9 +2,12 @@ package z_WIP_sandbox;
 
 import java.util.ArrayList;
 
+import m_activities.Activity;
+import m_activities.OptionBlock;
+import m_activities.Option;
+import m_activities.Result;
 import m_bag.Bag;
 import m_bag.Item;
-import m_game.Activity;
 import m_game.GameModel;
 import m_player.Trainer;
 import m_pokemon.Move;
@@ -12,34 +15,28 @@ import m_pokemon.Pokemon;
 
 public class BattleActivity extends Activity{
 
-	// ACTIVITY 
-	// tracks the state of the world (player/trainer/pokemon)
-	private GameModel model;
-	// ACTIVITY 
-	// tracks the state of the activity
-	private OptionBlock currentOptionBlock;
-	// ACTIVITY 
-	private boolean finalResultSent;
+	// internal model stuff:
 
-
-	// BATTLE ACTIVITY this
-	// internal model stuff, specific to this activity
-	
 	// short-cuts, can be derived from the base / ACTIVITY model
 	//private Player player;
 	//private Trainer trainer;
-	
-	// needed for dynamic menus
+
+	// needed for dynamic menus 
+	// (could be replaced by passing parameters to certain opt blocks)
 	private Item selectedItem = null;
 	private Pokemon selectedPokemon = null;
 
-
 	public BattleActivity(GameModel model) {
 		super(model);
-		this.model = model;
 
-		loadStartBlock();
-		load_fightBlock();
+		startBlock = new StartBlock();
+		_fightBlock = new _FightBlock();
+		
+		startBlock.initializeOptions(model);
+		_fightBlock.initializeOptions(model);
+		
+		//loadStartBlock();
+		//load_fightBlock();
 		load_bagBlock();
 		load_bag_itemBlock();
 		load_teamBlock();
@@ -47,59 +44,18 @@ public class BattleActivity extends Activity{
 		load_team_pokemon_healBlock();
 	}
 
-
-
-
-	//////////////////////////////
-
-	///// @Override Methods /////
-
-	//////////////////////////////
-
-
 	// load the initial options
 	@Override
 	public Result startActivity() {
 		currentOptionBlock = startBlock;
+
+		Result firstResult = new Result();
+		//		firstResult.updater = (String s) => {
+		//				return "";
+		//		}
+
 		return null;
 	}
-
-	// return the current OptionBlock
-	@Override
-	public OptionBlock getOptions() {
-		return currentOptionBlock;
-	}
-
-	/**
-	 * Accept an Option and use the Result to 
-	 * update the model and return a String with narration.
-	 * 
-	 * @param selection 
-	 */
-	@Override
-	public String selectOption(Option selection) {
-		// potential error: "selection" isn't from "currentOptionBlock"
-
-		Result result = selection.getResult();
-
-		currentOptionBlock = result.nextOptBlock;
-
-		// update the model,
-		// and save the resulting message
-		String narration;
-		narration = result.updater.updateModel(null);
-
-		// if this was the final result, record that
-		this.finalResultSent = result.finalMessage;
-
-		return narration;
-	}
-
-	// Should be Override
-	public boolean isFinalResultSent() {
-		return finalResultSent;
-	}
-
 
 
 
@@ -132,8 +88,11 @@ public class BattleActivity extends Activity{
 	//////////////////////////////
 
 
-	OptionBlock startBlock = new OptionBlock();
-	OptionBlock _fightBlock = new OptionBlock();
+	StartBlock startBlock;
+	_FightBlock _fightBlock;
+
+	//OptionBlock startBlock = new OptionBlock();
+	//OptionBlock _fightBlock = new OptionBlock();
 	OptionBlock _bagBlock = new OptionBlock();
 	OptionBlock _bag_itemBlock = new OptionBlock();
 	OptionBlock _teamBlock = new OptionBlock();
@@ -469,7 +428,7 @@ public class BattleActivity extends Activity{
 				// get narration
 				String narration = String.format("You swapped %s to the front.", 
 						selectedPokemon.getNickname()); 
-				
+
 				return narration;
 			};
 			// opt 1 : result.optionBlock
@@ -571,5 +530,218 @@ public class BattleActivity extends Activity{
 		_team_pokemon_healBlock.options.add(optBack);
 	}
 
+
+
+
+	//////////////////////////////////////
+
+	///// Inner Classes: Opt. Blocks /////
+
+	//////////////////////////////////////
+
+	// all blocks should be constructed after the model is received
+
+	// startBlock
+	// fixed option block	
+	private class StartBlock extends OptionBlock{
+		/**
+		 * Puts the OptionBlock into a usable state.
+		 * Must be called before trying to access the prompt or options.
+		 * 
+		 * @param model
+		 */
+		public void initializeOptions(GameModel model) {
+			loadPrompt();
+			loadOptions(model);
+		}
+
+		private void loadPrompt() {
+			this.prompt = "What do you do?";
+		}
+
+		private void loadOptions(GameModel model) {
+			this.options = new ArrayList<Option>();
+
+			// opt 1 // FIGHT
+			options.add(get_opt1_Fight(model));
+
+			// opt 2 // BAG
+			options.add(get_opt2_Bag(model));
+
+			// opt 3 // TEAM
+			options.add(get_opt3_Team(model));
+
+			// opt 4 // RUN
+			options.add(get_opt4_Run(model));
+		}
+
+		private Option get_opt1_Fight(GameModel model) {
+			// opt 1  // FIGHT
+			Option opt = new Option("1", "Fight", new Result());
+			// opt 1 : result
+			// opt 1 : result.modelUpdate
+			Result res = opt.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("You chose to fight."); 
+				return narration;
+			};
+			// opt 1 : result.optionBlock
+			res.nextOptBlock = _fightBlock;
+
+			return opt;
+		}
+
+		private Option get_opt2_Bag(GameModel model) {
+			// opt 2 // BAG
+			Option opt = new Option("2", "Bag", new Result());
+			// opt 2 : result
+			{
+				// opt 2 : result.modelUpdate
+				Result res = opt.getResult();
+				res.updater = (String selection) -> {
+					// update
+
+					// get narration
+					String narration = String.format("You opened the bag.");
+					return narration;
+				};
+				// opt 2 : result.optionBlock
+				res.nextOptBlock = _bagBlock;
+			}
+			return opt;
+		}
+
+		private Option get_opt3_Team(GameModel model) {
+			// opt 3 // TEAM
+			Option opt = new Option("3", "Team", new Result());
+			// opt 3 : result
+			{
+				// opt 3 : result.modelUpdate
+				Result res = opt.getResult();
+				res.updater = (String selection) -> {
+					// update
+
+					// get narration
+					String narration = String.format("You check your team.");
+					return narration;
+				};
+				// opt 3 : result.optionBlock
+				res.nextOptBlock = _teamBlock;
+			}
+			return opt;
+		}
+
+		private Option get_opt4_Run(GameModel model) {
+			// opt 4 // RUN
+			Option opt = new Option("4", "Run", new Result());
+			// opt 4 : result
+			{
+				// opt 4 : result.modelUpdate
+				Result res = opt.getResult();
+				res.updater = (String selection) -> {
+					// update
+
+					// get narration
+					String narration = String.format("You got away safely.");
+					return narration;
+				};
+				// opt 4 : result.end
+				res.finalMessage = true;
+			}
+			return opt;
+		}
+	}
+
+	// _fightBlock
+	// dynamic option block
+	private class _FightBlock extends OptionBlock{
+		/**
+		 * Puts the OptionBlock into a usable state.
+		 * Must be called before trying to access the prompt or options.
+		 * 
+		 * @param model
+		 */
+		public void initializeOptions(GameModel model) {
+			loadPrompt();
+			loadOptions(model);
+		}
+
+		private void loadPrompt() {
+			this.prompt = "What move do you use?";
+		}
+
+		private void loadOptions(GameModel model) {
+			this.options = new ArrayList<Option>();
+
+			options.addAll(get_AttackOptions(model));
+			options.add(get_optBACK());
+		}
+
+		/**
+		 * Returns a list of Options corresponding to all of the Player's leading
+		 * Pokemon's moves. Includes a "BACK" Option.
+		 * 
+		 * @param model
+		 * @return
+		 */
+		private ArrayList<Option> get_AttackOptions(GameModel model){
+			ArrayList<Option> allMoveOptions = new ArrayList<>();
+
+			Pokemon playerPoke = model.getPlayer().getTrainer().getFirstPokemon();
+
+			int i = 1;
+			for(Move move : playerPoke.getKnownMoves()) {
+				// opt 'i' // Move 'i'
+				Option opt = new Option(""+i, move.getName(), new Result());
+				// opt 'i' : result
+				Result res = opt.getResult();
+				res.updater = (String selection) -> {
+					// update
+
+					// get narration
+					String narration = "";
+					narration += String.format("%s used %s.\n", 
+							playerPoke.getNickname(), move.getName()); 
+					narration += String.format("The enemy %s used %s.", 
+							"Gible", "Rollout"); 
+
+					return narration;
+				};
+				// opt 'i' : result.optionBlock
+				res.nextOptBlock = startBlock;
+
+				// add option to all options
+				allMoveOptions.add(opt);
+			}
+			return allMoveOptions;
+		}
+
+		/**
+		 * Returns an Option without narration.
+		 * Redirects to the "Start" OptionBlock.
+		 * 
+		 * @return
+		 */
+		private Option get_optBACK() {
+			// opt BACK // 
+			Option opt = new Option("BACK", "return to the previous menu", new Result());
+			// opt BACK : result.modelUpdate
+			Result res = opt.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = null;
+				return narration;
+			};
+			// opt BACK : result.optionBlock
+			res.nextOptBlock = startBlock;
+
+			return opt;
+		}
+	}
 
 }

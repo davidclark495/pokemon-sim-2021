@@ -1,6 +1,6 @@
 package m_world;
 
-import m_game.Activity;
+import m_activities.Activity;
 
 /**
  * Represents an overworld location.

@@ -3,9 +3,9 @@ package z_WIP_sandbox;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import m_activities.Option;
+import m_activities.OptionBlock;
 import m_game.*;
-import m_game.Activity.Option;
-import m_game.Activity.OptionBlock;
 import m_pokemon.Pokemon;
 
 /**
@@ -38,7 +38,7 @@ public class ActivityDemo {
 		while(!battleAct.isFinalResultSent()) {
 
 
-			OptionBlock currentOptionBlock = battleAct.getOptions();
+			m_activities.OptionBlock currentOptionBlock = battleAct.getOptions();
 
 			// make a selection
 			Option selectedOption = null; 

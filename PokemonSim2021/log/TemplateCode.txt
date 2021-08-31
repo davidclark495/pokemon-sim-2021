@@ -1,0 +1,163 @@
+
+define Option
+
+	// opt 2 // BAG
+	Option opt2 = new Option("2", "Bag", new Result());
+	// opt 2 : result
+	{
+		// opt 2 : result.modelUpdate
+		Result res = opt2.getResult();
+		res.updater = (String selection) -> {
+			// update
+
+			// get narration
+			String narration = String.format("");
+			return narration;
+		};
+		// opt 2 : result.optionBlock
+		res.nextOptBlock = /*CHANGE*/res.nextOptBlock;
+	}
+		
+define OptionBlock: (menu options)
+	// fixed option block
+	private void load_block() 
+	{
+		/// define prompt ///
+		block.prompt = "What do you do?";
+
+		/// define options ///
+		block.options = new ArrayList<Option>();
+
+		// opt 1  // -----
+		Option opt1 = new Option("1", "-----", new Result());
+		// opt 1 : result
+		{
+			// opt 1 : result.modelUpdate
+			Result res = opt1.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("You chose -----."); 
+				return narration;
+			};
+			// opt 1 : result.optionBlock
+			res.nextOptBlock = -----;
+		}
+
+		// opt 2 // -----
+		Option opt2 = new Option("2", "-----", new Result());
+		// opt 2 : result
+		{
+			// opt 2 : result.modelUpdate
+			Result res = opt2.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("You chose -----.");
+				return narration;
+			};
+			// opt 2 : result.optionBlock
+			res.nextOptBlock = -----;
+		}
+
+		// opt 3 // -----
+		Option opt3 = new Option("3", "-----", new Result());
+		// opt 3 : result
+		{
+			// opt 3 : result.modelUpdate
+			Result res = opt3.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("You chose -----.");
+				return narration;
+			};
+			// opt 3 : result.optionBlock
+			res.nextOptBlock = -----;
+		}
+
+		// opt 4 // -----
+		Option opt4 = new Option("4", "-----", new Result());
+		// opt 4 : result
+		{
+			// opt 4 : result.modelUpdate
+			Result res = opt4.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("You ended the activity.");
+				return narration;
+			};
+			// opt 4 : result.optionBlock
+			res.nextOptBlock = null;
+			// opt 4 : result.activity
+			res.nextActivity = null;
+			// opt 4 : result.end
+			res.finalMessage = true;
+		}
+
+		block.options.add(opt1);
+		block.options.add(opt2);
+		block.options.add(opt3);
+		block.options.add(opt4);
+	}
+
+
+
+define OptionBlock: (model dependent)
+	// dynamic option block
+	private void load_asdfBlock(){
+		/// define prompt ///
+		_asdfBlock.prompt = "<--prompt-->";
+
+		/// define options ///
+		_asdfBlock.options = new ArrayList<Option>();
+		
+		
+		Entity entity = model.getSomething();
+		
+		int id = 1;
+		for(ListObject ob : entity.getList()) {
+			// opt 'id' // Move 'id'
+			Option opt = new Option(""+id, move.getName(), new Result());
+			// opt 'id' : result
+			Result res = opt.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = String.format("");
+				
+				return narration;
+			};
+			// opt 'id' : result.optionBlock
+			res.nextOptBlock = _xyzBlock;
+			
+			// add option to all options
+			_asdfBlock.options.add(opt);
+		}
+	}
+	
+define OptionBlock: BACK
+		// opt BACK // 
+		Option optBack = new Option("BACK", "return to the previous menu", new Result());
+		// opt BACK : result
+		{
+			// opt BACK : result.modelUpdate
+			Result res = optBack.getResult();
+			res.updater = (String selection) -> {
+				// update
+
+				// get narration
+				String narration = null;
+				return narration;
+			};
+			// opt BACK : result.optionBlock
+			res.nextOptBlock = startBlock;
+		}
+		_teamBlock.options.add(optBack);
+	

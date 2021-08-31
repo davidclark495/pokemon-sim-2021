@@ -15,7 +15,7 @@ public class Player {
 	
 	public Player(String trainerName) {
 		trainer = new Trainer(trainerName);
-		bag = Bag.getBasicBag();
+		bag = new Bag();
 	}
 	
 	///// Accessors /////

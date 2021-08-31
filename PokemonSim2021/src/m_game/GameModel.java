@@ -3,6 +3,9 @@ package m_game;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import m_activities.Activity;
+import m_bag.Bag;
+import m_bag.Item;
 import m_player.Player;
 import m_player.Trainer;
 import m_pokemon.MoveList;
@@ -27,7 +30,13 @@ public class GameModel {
 	
 	public GameModel() {
 		/// set up the player ///
-		player = new Player(",,,");
+		player = new Player("...");
+
+		// set up the player's bag
+		Bag bag = player.getBag();
+		for(Item item : Bag.getBasicBag().getItemSet()) {
+			bag.addItem(item);
+		}
 		
 		// set up the trainer
 		Trainer trainer = player.getTrainer();
@@ -41,6 +50,7 @@ public class GameModel {
 		poke2.teachMove(MoveList.getMove("Ember"));
 		poke2.teachMove(MoveList.getMove("Flame Wheel"));
 		trainer.addPokemonToParty(poke2);
+		
 	}
 	
 	public Player getPlayer() {

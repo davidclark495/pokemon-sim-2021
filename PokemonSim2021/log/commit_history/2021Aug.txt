@@ -1,0 +1,66 @@
+2021/08/31 - 2021/08/31
+
+Goal of this commit: 
+- clean-up BattleActivity, make it scaleable
+  * Activity (abs) and BattleActivity should demonstrate proper inheritance
+  * OptionBlocks should be implemented as private inner classes extending OptionBlock
+  * rearrange project structure, grouping activity-related classes in the same package
+
+Changes since last commit:
+- New Classes
+  * private OptionBlock-extending classes inside BattleActivity
+- Modified Classes
+  * GameModel.java	(player's bag is now set-up here)
+  * Player.java		(player now starts with an empty bag, previously started with a basic bag)
+
+To-Do (for future commits):
+- go-over BACK options
+  * should they take you to the previous menu? to the start menu?
+  * make a decision + ensure compliance
+- develop a way of getting text (i.e. non-menu) input
+- finish converting BattleActivity's OptionBlocks into inner classes
+  * currently, only StartBlock and _FightBlock have dedicated classes
+  * certain features should be added to OptionBlock for inheritance (e.g. initialize())
+  * a better solution for establishing connections between blocks (a Dictionary?) would help
+
+To-Do (carried over from last log):
+- standardize certain Options (e.g. BACK)
+- Pokemon in PokemonList should start with at least 1 Move
+- flesh-out BagTester
+
+
+
+
+
+******************************
+
+2021/08/22 - 2021/08/30
+
+Goal of this commit: 
+- finish BattleActivity + necessary model updates
+  * BattleActivity + ActivityDemo should be able to navigate an Activity
+    (i.e. take input, display options, etc.)
+  * BattleActivity doesn't need to actually change the model yet (that can be done later)
++ as of 08/30/21, the goal appears to be met
+
+Changes since last commit:
+- New Classes
+  * Bag, Item, Pokeball
+  * Pokemon.StatBlock (unfinished)
+- Modified Classes
+  * Trainer (added getParty())
+  * Pokemon (works with StatBlock)
+  * PokemonList (new Pokemon)
+
+To-Do (for future commits):
+- standardize certain Options (e.g. BACK)
+- Pokemon in PokemonList should start with at least 1 Move
+- clean-up Activity, put certain methods / objects in the abstract version
+- flesh-out BagTester
+
+
+
+
+
+******************************
+
