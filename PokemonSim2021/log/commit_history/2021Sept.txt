@@ -1,0 +1,42 @@
+2021/09/01 - 2021/09/01
+
+Goal of this commit: 
+- change how OptionBlocks are defined
+  * should be defined as a private class in an Activity; should extend OptionBlock
+  * should be able to take parameters (either in OptionBlock or in the extended class) 
+
+Changes since last commit:
+- New Classes
+  * private OptionBlock-extending classes inside BattleActivity
+- Modified Classes
+  * OptionBlock, additional "param" functions
+
+
+
+To-Do (for this commit, from previous commits):
+- finish converting BattleActivity's OptionBlocks into inner classes
+  * currently, only StartBlock and _FightBlock have dedicated classes
+  * certain features should be added to OptionBlock for inheritance (e.g. initialize())
+  * a better solution for establishing connections between blocks (a Dictionary?) would help
+- go-over BACK options
+  * decision: BACK options return you to the previous menu (not always START)
+
+To-Do (for future commits):
+- review design for MVC compliance
+	- build a prototype GUI
+- review access modifiers / getters & setters
+- review method naming conventions for OptionBlock helper methods
+- known problem: OptionBlock.setParam() is called instead of (for ex.) StartBlock.setParam()
+	- causes gaps in safety-checking assignment
+
+To-Do (carried over from last log):
+- develop a way of getting text (i.e. non-menu) input
+- standardize certain Options (e.g. BACK)
+- Pokemon in PokemonList should start with at least 1 Move
+- flesh-out BagTester
+
+
+
+
+
+******************************

@@ -7,7 +7,11 @@ import m_game.GameModel;
 /**
  * Represents an activity (e.g. fighting, shopping, traveling) that the player can 
  * engage in.
+ * 
  * Provides methods for getting options, making a selection, and getting results.
+ * 
+ * Classes that extend this should define a set of OptionBlocks that control the
+ * flow of the Activity.
  * 
  * @author davidclark
  * Date: 08/20/21

@@ -15,13 +15,23 @@ package m_activities;
  */
 public class Result {
 
+	///// Manage Program Flow /////
+	// these properties are used to control what the game will do next
+	
 	// defaults to null
-	public OptionBlock nextOptBlock = null;		
-	// may be null
+	public OptionBlock nextOptBlock = null;
+	
+	// defaults to null
 	public Activity nextActivity = null;
+	
 	// True if this result is the end of the activity
 	public boolean finalMessage = false;
 
+	
+	///// Update Game /////
+	// these properties are used to change the state of the game 
+	// and to communicate what changed
+	
 	// 
 	public Updater updater; 
 	
