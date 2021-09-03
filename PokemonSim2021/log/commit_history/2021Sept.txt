@@ -1,3 +1,43 @@
+2021/09/01 - 2021/09/02
+
+Goal of this commit: 
+- add functionality to m_bag
+	- add HealItem.java, others if appropriate
+- add tests to BagTester
+
+Changes since last commit:
+- New Classes
+	* HealItem
+- Modified Classes
+	* Bag (the default bag includes potions)
+	* BagTester (more tests)
+	* BattleActivity (you can now only heal a pokemon using a heal item)
+
+
+
+To-Do (for this commit, from previous commits):
+- flesh-out BagTester
+
+To-Do (for future commits):
+- in BattleActivity, add a _bag_item_heal OptionBlock
+
+To-Do (carried over from last log):
+- review design for MVC compliance
+	- build a prototype GUI
+- review access modifiers / getters & setters (in m_activities)
+- review method naming conventions for OptionBlock helper methods
+- known problem: OptionBlock.setParam() is called instead of (for ex.) StartBlock.setParam()
+	- causes gaps in safety-checking assignment
+- develop a way of getting text (i.e. non-menu) input
+- standardize certain Options (e.g. BACK)
+- Pokemon in PokemonList should start with at least 1 Move
+
+
+
+
+
+******************************
+
 2021/09/01 - 2021/09/01
 
 Goal of this commit: 

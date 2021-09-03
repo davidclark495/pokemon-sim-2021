@@ -7,6 +7,7 @@ import m_activities.OptionBlock;
 import m_activities.Option;
 import m_activities.Result;
 import m_bag.Bag;
+import m_bag.HealItem;
 import m_bag.Item;
 import m_game.GameModel;
 import m_player.Trainer;
@@ -636,6 +637,9 @@ public class BattleActivity extends Activity{
 			// iterate through all items in the bag, create corresponding Options
 			int id = 1;
 			for(Item item : bag.getItemSet()) {
+				if(!(item instanceof HealItem))
+					continue;
+				
 				// opt 'id' // Item 'id'
 				Option opt = new Option(""+id, item.getName(), new Result());
 				// opt 'id' : result
