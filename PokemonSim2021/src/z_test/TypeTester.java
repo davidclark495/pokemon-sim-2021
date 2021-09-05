@@ -48,22 +48,7 @@ public class TypeTester {
 		assertFalse(Type.FIRE.isResistantTo(Type.NORMAL));
 	}
 	
-	@Test
-	public void calcDamageMultiplier_Fire() {
-		// FIRE attacks
-		assertEquals(0.5, Type.calcDmgMultiplier(Type.FIRE, Type.FIRE));
-		assertEquals(0.5, Type.calcDmgMultiplier(Type.FIRE, Type.WATER));
-		assertEquals(1.0, Type.calcDmgMultiplier(Type.FIRE, Type.NORMAL));
-		assertEquals(2.0, Type.calcDmgMultiplier(Type.FIRE, Type.GRASS));
-		
-		// FIRE defends
-		assertEquals(0.5, Type.calcDmgMultiplier(Type.FIRE, Type.FIRE));
-		assertEquals(0.5, Type.calcDmgMultiplier(Type.GRASS, Type.FIRE));
-		assertEquals(1.0, Type.calcDmgMultiplier(Type.NORMAL, Type.FIRE));
-		assertEquals(2.0, Type.calcDmgMultiplier(Type.WATER, Type.FIRE));
-	}
-
-
+	
 
 
 }

@@ -1,3 +1,50 @@
+2021/09/02 - 2021/09/05 - 
+
+UNFINISHED
+
+Goal of this commit: 
++ make Pokemon objects more detailed and easier to create 
+- add to / clean-up Pokemon.java's stat-related functions
+- add to 			Pokemon.java's battle-related functions
+- add an XML file / parser to PokemonList.java
+
+Changes since last commit:
+- New Classes
+	- PokemonBattleExtensions.java (helpful battle-related math & methods)
+	- inner classes in Pokemon.java 
+		(PersistentStatBlock, InBattleTempStatBlock, RewardStatBlock)
+- Modified Classes
+	- Pokemon.java (more to do with StatBlocks, battles)
+	- Pokemon.StatBlock (broken-up into other blocks, + more in-depth functionality)
+- New Files
+	- res/AllPokemon.xml (can be read to produce the PokemonList.java data)
+
+
+To-Do (for this commit, from previous commits):
+- Pokemon in PokemonList should start with at least 1 Move
+
+To-Do (for future commits):
+- make OptionBlock abstract?
+- add support for Effects in PokemonBattleExtensions
+- make a Narration class in m_activities
+
+To-Do (carried over from last log):
+- in BattleActivity, add a _bag_item_heal OptionBlock
+- review design for MVC compliance
+	- build a prototype GUI
+- review access modifiers / getters & setters (in m_activities)
+- review method naming conventions for OptionBlock helper methods
+- known problem: OptionBlock.setParam() is called instead of (for ex.) StartBlock.setParam()
+	- causes gaps in safety-checking assignment
+- develop a way of getting text (i.e. non-menu) input
+- standardize certain Options (e.g. BACK)
+
+
+
+
+
+******************************
+
 2021/09/01 - 2021/09/02
 
 Goal of this commit: 

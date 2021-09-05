@@ -237,6 +237,11 @@ public class PokemonTester {
 
 	
 	///// Test Stats /////
+	
+	@Test
+	public void levelUp() {
+		assertEquals(0,0);
+	}
 
 
 }

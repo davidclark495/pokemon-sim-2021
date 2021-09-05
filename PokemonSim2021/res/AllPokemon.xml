@@ -1,0 +1,70 @@
+<ALL_POKEMON_LIST>
+	<pokemon>
+		<index>4</index>
+		<species>Charmander</species>
+		<type>FIRE</type>
+		<baseStats>
+			<baseHP>39</baseHP>
+			<baseAtk>52</baseAtk>
+			<baseDef>43</baseDef>
+		</baseStats>
+		<knownMoves>
+			<move>Scratch</move>
+			<move>Growl</move>
+		</knownMoves>
+		<moveList>
+			<moveEntry>
+				<levelLearned>7</levelLearned>
+				<move>Ember</move>
+			</moveEntry>
+			<moveEntry>
+				<levelLearned>11</levelLearned>
+				<move>Fire Spin</move>
+			</moveEntry>
+			<moveEntry>
+				<levelLearned>14</levelLearned>
+				<move>Flamethrower</move>
+			</moveEntry>
+		</moveList>
+		<evolutionList>
+			<evolutionEntry>
+				<levelNeeded>16</levelNeeded>
+				<resultSpecies>Charmeleon</resultSpecies>
+			</evolutionEntry>
+		</evolutionList>
+	</pokemon><pokemon>
+		<index>133</index>
+		<species>Eevee</species>
+		<type>NORMAL</type>
+		<baseStats>
+			<baseHP>55</baseHP>
+			<baseAtk>55</baseAtk>
+			<baseDef>50</baseDef>
+		</baseStats>
+		<knownMoves>
+			<move>Tail Whip</move>
+			<move>Tackle</move>
+		</knownMoves>
+		<moveList>
+			<moveEntry>
+				<levelLearned>4</levelLearned>
+				<move>Growl</move>
+			</moveEntry>
+		</moveList>
+		<evolutionList>
+			<evolutionEntry>
+				<itemHeld>Water Stone</itemHeld>
+				<resultSpecies>Vaporeon</resultSpecies>
+			</evolutionEntry>
+			<evolutionEntry>
+				<itemHeld>Lightning Stone</itemHeld>
+				<resultSpecies>Jolteon</resultSpecies>
+			</evolutionEntry>
+			<evolutionEntry>
+				<itemHeld>Fire Stone</itemHeld>
+				<resultSpecies>Flareon</resultSpecies>
+			</evolutionEntry>
+		</evolutionList>
+	</pokemon>
+	
+</ALL_POKEMON_LIST>

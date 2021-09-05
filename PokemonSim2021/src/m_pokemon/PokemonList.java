@@ -2,6 +2,7 @@ package m_pokemon;
 
 import java.util.HashMap;
 
+
 /**
  * A static class that other classes can get pre-fab Pokemon objects from.
  * Establishes consistency across Pokemon in the project.
@@ -17,6 +18,12 @@ public class PokemonList {
 
 	private static HashMap<String, Pokemon> allPokemon = new HashMap<String, Pokemon>();
 
+	/**
+	 * Return a copy of one of the registered Pokemon.
+	 * 
+	 * @param pokemonName
+	 * @return
+	 */
 	public static Pokemon getPokemon(String pokemonName) {
 		return new Pokemon(allPokemon.get(pokemonName));
 	}
@@ -45,4 +52,5 @@ public class PokemonList {
 		// OTHER
 	}
 
+	///// List: XML parser /////
 }

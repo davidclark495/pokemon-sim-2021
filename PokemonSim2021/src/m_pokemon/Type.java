@@ -13,6 +13,9 @@ public enum Type {
 	// enum fields
 	NORMAL, FIRE, WATER, GRASS, NotYetImplemented;
 
+	
+	
+	
 	private HashSet<Type> weaknesses = new HashSet<Type>();
 	private HashSet<Type> resistances = new HashSet<Type>();
 
@@ -77,19 +80,6 @@ public enum Type {
 		return this.getResistances().contains(attacker);
 	}
 
-	/**
-	 * Returns a damage multiplier based on 
-	 * @param defender
-	 * @param attacker
-	 * @return
-	 */
-	public static double calcDmgMultiplier(Type attacker, Type defender) {
-		if(defender.isResistantTo(attacker))
-			return 0.5;
-		else if(defender.isWeakTo(attacker))
-			return 2.0;
-		else
-			return 1.0;
-	}
+	
 
 }
