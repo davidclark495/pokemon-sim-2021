@@ -3,6 +3,7 @@ package m_pokemon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Represents a pokemon, complete with name/type/stats/etc.
@@ -14,9 +15,10 @@ public class Pokemon {
 
 	public static final int MAX_NUM_MOVES = 4;
 
-	// The species' type
-	private Type type;
-	// The species' name
+	// The species' types, shouldn't change after construction
+//	private Type[] types;
+	private ArrayList<Type> types = new ArrayList<Type>();
+	// The species' name, shouldn't change after construction
 	private String name;
 
 	// The individual's nickname
@@ -35,39 +37,41 @@ public class Pokemon {
 
 	// level-up rewards (moves, evolutions)
 	//private HashMap<Integer, Move> movesToLearn;
-	//private HashMap<EvolCondit, Pokemon> nextEvolution;
+	//private ArrayList<EvolutionEntry> nextEvolution; // contains condit's + evolution
 
 
 	///// Constructors /////
 
 	/**
-	 * DEPRECATED - not viable for game
-	 * 
-	 * Create a Pokemon with a given species' name
-	 * @param name
-	 */
-	public Pokemon(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * DEPRECATED - not viable for game
-	 * 
-	 * Create a Pokemon with a given name and type.
+	 * Create a Pokemon with the given name, types, and base stats.
+	 * Accepting an array for "types" is generally unsafe (or at least misleading)
+	 * so this must stay private.
+	 * The Pokemon will start at level 1.
 	 * 
 	 * @param name
-	 * @param type must not be null
-	 * @throws IllegalArgumentException if type is null
+	 * @param baseHP
+	 * @param baseAtk
+	 * @param baseDef
 	 */
-	public Pokemon(String name, Type type) {
-		this(name, type, 0, 0, 0);
+	private Pokemon(String name, Type[] types, 
+			int baseHP, int baseAtk, int baseDef,
+			int HPEVsDropped, int AtkEVsDropped, int DefEVsDropped) {
+		if(name == null) {
+			throw new IllegalArgumentException("A Pokemon's name cannot be null.");
+		}
 
 		this.name = name;
-		this.type = type;
+		this.types.add(types[0]);
+		if(types.length == 2)
+			this.types.add(types[1]);
+		this.stats = new PersistentStatBlock(baseHP, baseAtk, baseDef, 1);
+		this.rewardStats = new RewardStatBlock(HPEVsDropped, AtkEVsDropped, DefEVsDropped);
 	}
 
+	// PUBLIC: CREATE A POKEMON BASED ON STATS
+
 	/**
-	 * Create a Pokemon with a given name, type, and base stats.
+	 * Create a Pokemon with a given name, type, base-stats, and drop-stats.
 	 * The Pokemon will start at level 1.
 	 * 
 	 * @param name
@@ -75,23 +79,58 @@ public class Pokemon {
 	 * @param baseHP
 	 * @param baseAtk
 	 * @param baseDef
+	 * @param HPEVsDropped
+	 * @param AtkEVsDropped
+	 * @param DefEVsDropped
 	 */
-	public Pokemon(String name, Type type, int baseHP, int baseAtk, int baseDef) {
-		if(name == null) {
-			throw new IllegalArgumentException("A Pokemon's name cannot be null.");
-		}
-		if(type == null) {
-			throw new IllegalArgumentException("A Pokemon's type cannot be null.");
-		}
+	public Pokemon(String name, Type type, 
+			int baseHP, int baseAtk, int baseDef,
+			int HPEVsDropped, int AtkEVsDropped, int DefEVsDropped
+			) {
+		// call the private Type[] constructor
+		this(name, new Type[]{type}, 
+				baseHP, baseAtk, baseDef,
+				HPEVsDropped, AtkEVsDropped, DefEVsDropped);
 
-		this.name = name;
-		this.type = type;
-		this.stats = new PersistentStatBlock(baseHP, baseAtk, baseDef, 1);
-		this.rewardStats = new RewardStatBlock(0, 0, 0);
+		// confirm that type isn't null before finishing
+		if(type == null) {
+			throw new IllegalArgumentException("A Pokemon must have a non-null type.");
+		}
 	}
 
 	/**
-	 * Create a Pokemon with the same species-name, type, base stats, 
+	 * Create a Pokemon with a given name, types, base-stats, and drop-stats.
+	 * The Pokemon will start at level 1.
+	 * 
+	 * @param name
+	 * @param type1
+	 * @param type2
+	 * @param baseHP
+	 * @param baseAtk
+	 * @param baseDef
+	 * @param HPEVsDropped
+	 * @param AtkEVsDropped
+	 * @param DefEVsDropped
+	 */
+	public Pokemon(String name, Type type1, Type type2, 
+			int baseHP, int baseAtk, int baseDef,
+			int HPEVsDropped, int AtkEVsDropped, int DefEVsDropped) {
+
+		// call the private Type[] constructor
+		this(name, new Type[]{type1, type2}, 
+				baseHP, baseAtk, baseDef, 
+				HPEVsDropped, AtkEVsDropped, DefEVsDropped);
+
+		// confirm that types aren't null before finishing
+		if(type1 == null || type2 == null) {
+			throw new IllegalArgumentException("A Pokemon must have a non-null type.");
+		}
+	}
+
+	// PUBLIC: CREATE A POKEMON BASED ON AN EXISTING POKEMON
+
+	/**
+	 * Create a Pokemon with the same species-name, type(s), base-stats, drop-stats
 	 * level, and move list.
 	 * 
 	 * Does NOT copy a Pokemon's EVs and nickname.
@@ -99,9 +138,10 @@ public class Pokemon {
 	 * @param clone
 	 */
 	public Pokemon(Pokemon clone) {
-		// copy the Pokemon's species-name, type, and base stats
-		this(clone.getName(), clone.getType(), 
-				clone.stats.baseHP, clone.stats.baseAtk, clone.stats.baseDef);
+		// copy the Pokemon's species-name, type(s), base-stats, and drop-stats
+		this(clone.getName(), clone.types.toArray(new Type[0]),
+				clone.stats.baseHP, clone.stats.baseAtk, clone.stats.baseDef,
+				clone.rewardStats.hpEVsDropped, clone.rewardStats.atkEVsDropped, clone.rewardStats.defEVsDropped);
 
 		// copy the Pokemon's level
 		while(this.getLvl() < clone.getLvl())
@@ -113,22 +153,23 @@ public class Pokemon {
 	}
 
 	/**
-	 * Create a new Pokemon of the same species (name, type, base stats)
+	 * Create a new Pokemon of the same species (name, type(s), base-stats, drop-stats)
 	 * at the given level (different level, different moves).
 	 * 
 	 * @param template 
 	 */
 	public Pokemon(Pokemon template, int level) {
-		// copy the Pokemon's species-name, type, and base stats
-		this(template.getName(), template.getType(), 
-				template.stats.baseHP, template.stats.baseAtk, template.stats.baseDef);
+		// copy the Pokemon's species-name, type(s), base-stats, and drop-stats
+		this(template.getName(), template.types.toArray(new Type[0]),
+				template.stats.baseHP, template.stats.baseAtk, template.stats.baseDef, 
+				template.rewardStats.hpEVsDropped, template.rewardStats.atkEVsDropped, template.rewardStats.defEVsDropped);
 
 		// get to the desired level
 		while(this.getLvl() < level)
 			this.levelUp_NoCost();
 	}
 
-	
+
 
 
 	///// Accessors /////
@@ -156,13 +197,150 @@ public class Pokemon {
 	}
 
 	/**
+	 * Returns an array containing either 1 or 2 types.
 	 * 
-	 * @return the Pokemon's type
+	 * @return the Pokemon's types
 	 */
-	public Type getType() {
-		return type;
+	public ArrayList<Type> getTypes() {
+		
+		return types;
 	}
 
+	/**
+	 * Returns a map containing all types mapped to
+	 * a damage multiplier (0.25x, 0.5x, 2x, 4x).
+	 * Excludes 1x/neutral types.
+	 * 
+	 * @return the Pokemon's weaknesses
+	 */
+	private HashMap<Type, Double> getTypeMatchupMap() {
+		HashMap<Type, Double> matchups = new HashMap<>();
+		HashSet<Type> weaknesses2x = new HashSet<>();
+		HashSet<Type> weaknesses4x = new HashSet<>();
+		HashSet<Type> resistancesHalfX = new HashSet<>();
+		HashSet<Type> resistancesQuarterX = new HashSet<>();
+
+		weaknesses2x.addAll(types.get(0).getWeaknesses());
+		resistancesHalfX.addAll(types.get(0).getResistances());
+
+		if(types.size() == 2) {
+			// weaknesses
+			weaknesses2x.addAll(types.get(1).getWeaknesses());
+			weaknesses2x.removeAll(types.get(0).getResistances());
+			weaknesses2x.removeAll(types.get(1).getResistances());
+			// 4x = intersection of weaknesses
+			weaknesses4x.addAll(types.get(0).getWeaknesses());
+			weaknesses4x.retainAll(types.get(1).getWeaknesses());
+			weaknesses2x.removeAll(weaknesses4x);
+			
+			// resistances
+			resistancesHalfX.addAll(types.get(1).getResistances());
+			resistancesHalfX.removeAll(types.get(0).getWeaknesses());
+			resistancesHalfX.removeAll(types.get(1).getWeaknesses());
+			// Quarterx = intersection of resistances
+			resistancesQuarterX.addAll(types.get(0).getResistances());
+			resistancesQuarterX.retainAll(types.get(1).getResistances());
+			resistancesHalfX.removeAll(resistancesQuarterX);
+		}
+
+		for(Type weak2x : weaknesses2x)
+			matchups.put(weak2x, 2.0);
+		for(Type weak4x : weaknesses4x)
+			matchups.put(weak4x, 4.0);
+		for(Type resistHalf : resistancesHalfX)
+			matchups.put(resistHalf, 0.5);
+		for(Type resistQuarter : resistancesQuarterX)
+			matchups.put(resistQuarter, 0.25);
+		return matchups;
+	}
+
+	/**
+	 * Returns a set containing all types this Pokemon has a certain
+	 * relationship to, i.e. the Pokemon is weak/resistant to by with a 
+	 * "mult" damage multiplier (e.g. 2x, 0.25x).
+	 * 
+	 * @return types with the given relationship
+	 */
+	private HashSet<Type> getTypeMatchupsWithMultiplier(double mult) {
+		HashSet<Type> outputTypes = new HashSet<>();
+
+		for(Map.Entry<Type, Double> matchupEntry : getTypeMatchupMap().entrySet()) {
+			Type type = matchupEntry.getKey();
+			double multiplier = matchupEntry.getValue();
+
+			if(multiplier == mult)
+				outputTypes.add(type);
+		}
+
+		return outputTypes;
+	}
+	
+	/**
+	 * Returns a set containing all types this Pokemon is weak to.
+	 * @return the Pokemon's weaknesses
+	 */
+	public HashSet<Type> getAllWeaknesses() {
+		HashSet<Type> allWeaknesses = new HashSet<>();
+		allWeaknesses.addAll( getTypeMatchupsWithMultiplier(2) );
+		allWeaknesses.addAll( getTypeMatchupsWithMultiplier(4) );
+		return allWeaknesses;
+	}
+
+	/**
+	 * Returns a set containing all types this Pokemon is 2x weak to.
+	 * @return the Pokemon's weaknesses
+	 */
+	public HashSet<Type> get2xWeaknesses() {
+		HashSet<Type> weaknesses = new HashSet<>();
+		weaknesses.addAll( getTypeMatchupsWithMultiplier(2) );
+		return weaknesses;
+	}
+
+	/**
+	 * Returns a set containing all types this Pokemon is 4x weak to.
+	 * @return the Pokemon's weaknesses
+	 */
+	public HashSet<Type> get4xWeaknesses() {
+		HashSet<Type> weaknesses = new HashSet<>();
+		weaknesses.addAll( getTypeMatchupsWithMultiplier(4) );
+		return weaknesses;
+	}
+	
+	/**
+	 * Returns a set containing all types this Pokemon resists.
+	 * @return the Pokemon's resistances
+	 */
+	public HashSet<Type> getAllResistances() {
+		HashSet<Type> allResistances = new HashSet<>();
+		allResistances.addAll( getTypeMatchupsWithMultiplier(0.5) );
+		allResistances.addAll( getTypeMatchupsWithMultiplier(0.25) );
+		return allResistances;
+	}
+	
+	/**
+	 * Returns a set containing all types this Pokemon resists 
+	 * (damage multiplier = 0.5x).
+	 * 
+	 * @return the Pokemon's resistances
+	 */
+	public HashSet<Type> getHalfResistances() {
+		HashSet<Type> resistances = new HashSet<>();
+		resistances.addAll( getTypeMatchupsWithMultiplier(0.5) );
+		return resistances;
+	}
+
+	/**
+	 * Returns a set containing all types this Pokemon resists 
+	 * (damage multiplier = 0.25x).
+	 * 
+	 * @return the Pokemon's resistances
+	 */
+	public HashSet<Type> getQuarterResistances() {
+		HashSet<Type> resistances = new HashSet<>();
+		resistances.addAll( getTypeMatchupsWithMultiplier(0.25) );
+		return resistances;
+	}
+	
 	/**
 	 * Returns true if the Pokemon is fainted / has 0 HP.
 	 * @return

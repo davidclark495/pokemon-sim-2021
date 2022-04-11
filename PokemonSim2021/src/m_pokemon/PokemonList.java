@@ -35,9 +35,9 @@ public class PokemonList {
 	}
 
 	// NORMAL
-	private static Pokemon eevee = new Pokemon("Eevee", Type.NORMAL);
+	private static Pokemon eevee = new Pokemon("Eevee", Type.NORMAL, 0,0,0,0,0,0);
 	// FIRE
-	private static Pokemon charmander = new Pokemon("Charmander", Type.FIRE);
+	private static Pokemon charmander = new Pokemon("Charmander", Type.FIRE, 0,0,0,0,0,0);
 	// WATER
 	// GRASS
 	// OTHER

@@ -25,7 +25,7 @@ public class PokemonTester {
 	@Test
 	public void constructor_NullType() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new Pokemon("missingno", null) ;
+			new Pokemon("missingno", null, 0,0,0,0,0,0) ;
 		});
 	}
 
@@ -33,7 +33,7 @@ public class PokemonTester {
 	public void getName() {
 		// set up
 		String expectedName = "Shuckle";
-		Pokemon pokemon = new Pokemon(expectedName);
+		Pokemon pokemon = new Pokemon(expectedName, Type.NotYetImplemented, 0,0,0,0,0,0);
 
 		// test
 		assertEquals(expectedName, pokemon.getName());
@@ -47,7 +47,7 @@ public class PokemonTester {
 	public void getNickname_Null() {
 		// set up
 		String expectedName = "Espurr";
-		Pokemon pokemon = new Pokemon(expectedName);
+		Pokemon pokemon = new Pokemon(expectedName, Type.NotYetImplemented, 0,0,0,0,0,0);
 
 		// test
 		assertEquals(expectedName, pokemon.getNickname());
@@ -60,7 +60,7 @@ public class PokemonTester {
 	@Test
 	public void getNickname_NotNull() {
 		// set up
-		Pokemon pokemon = new Pokemon("Espurr");
+		Pokemon pokemon = new Pokemon("Espurr", Type.NotYetImplemented, 0,0,0,0,0,0);
 
 		String expectedNickname = "Eesp";
 		pokemon.setNickname(expectedNickname);
@@ -70,13 +70,27 @@ public class PokemonTester {
 	}
 
 	@Test
-	public void getType() {
+	public void getType_oneType() {
 		// set up
 		Type expectedType = Type.GRASS;
-		Pokemon pokemon = new Pokemon("Carnivine", expectedType);
+		Pokemon pokemon = new Pokemon("Carnivine", expectedType, 0,0,0,0,0,0);
 
 		// test
-		assertEquals(expectedType, pokemon.getType());
+		assertEquals(1, pokemon.getTypes().length);
+		assertEquals(expectedType, pokemon.getTypes()[0]);
+	}
+	
+	@Test
+	public void getType_twoTypes() {
+		// set up
+		Type expectedType1 = Type.FIRE;
+		Type expectedType2 = Type.NORMAL;
+		Pokemon pokemon = new Pokemon("Pyroar", expectedType1, expectedType2, 0,0,0,0,0,0);
+
+		// test
+		assertEquals(2, pokemon.getTypes().length);
+		assertEquals(expectedType1, pokemon.getTypes()[0]);
+		assertEquals(expectedType2, pokemon.getTypes()[1]);
 	}
 
 	@Test
@@ -93,7 +107,7 @@ public class PokemonTester {
 		expectedMoves.add(m3);
 		expectedMoves.add(m4);
 
-		Pokemon pokemon = new Pokemon("Chinchou");
+		Pokemon pokemon = new Pokemon("Chinchou", Type.NotYetImplemented, 0,0,0,0,0,0);
 		boolean result1 = pokemon.teachMove(m1);
 		boolean result2 = pokemon.teachMove(m2);
 		boolean result3 = pokemon.teachMove(m3);
@@ -116,7 +130,7 @@ public class PokemonTester {
 	@Test
 	public void teachMove_Fail_DuplicateMove() {
 		// set up
-		Pokemon pokemon = new Pokemon("Chinchou");
+		Pokemon pokemon = new Pokemon("Chinchou", Type.NotYetImplemented, 0,0,0,0,0,0);
 		Move move = MoveList.getMove("Bubble");
 
 		ArrayList<Move> expectedMoves = new ArrayList<Move>();
@@ -149,7 +163,7 @@ public class PokemonTester {
 		expectedMoves.add(m4);
 		// m5 should not be added
 
-		Pokemon pokemon = new Pokemon("Chinchou");
+		Pokemon pokemon = new Pokemon("Chinchou", Type.NotYetImplemented, 0,0,0,0,0,0);
 		pokemon.teachMove(m1);
 		pokemon.teachMove(m2);
 		pokemon.teachMove(m3);
@@ -166,7 +180,7 @@ public class PokemonTester {
 	@Test
 	public void forgetMove() {
 		// set up
-		Pokemon pokemon = new Pokemon("Chinchou");
+		Pokemon pokemon = new Pokemon("Chinchou", Type.NotYetImplemented, 0,0,0,0,0,0);
 		Move m1 = MoveList.getMove("Bubble");
 		Move m2 = MoveList.getMove("Water Gun");
 		Move m3 = MoveList.getMove("Water Pulse");
@@ -214,7 +228,7 @@ public class PokemonTester {
 	@Test
 	public void forgetMove_teachMove_Loop() {
 		// set up
-		Pokemon pokemon = new Pokemon("Chinchou");
+		Pokemon pokemon = new Pokemon("Chinchou", Type.NotYetImplemented, 0,0,0,0,0,0);
 		Move m1 = MoveList.getMove("Bubble");
 		Move m2 = MoveList.getMove("Water Gun");
 		Move m3 = MoveList.getMove("Water Pulse");

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import m_player.Player;
 import m_player.Trainer;
 import m_pokemon.Pokemon;
+import m_pokemon.Type;
 
 public class TrainerTester {
 
@@ -28,7 +29,7 @@ public class TrainerTester {
 	public void TrainerPokemonLink() {
 		// set up
 		Trainer trainer = new Trainer("May");
-		Pokemon pokemon = new Pokemon("Tangela");
+		Pokemon pokemon = new Pokemon("Tangela", Type.NotYetImplemented, 0,0,0,0,0,0);
 		
 		trainer.addPokemonToParty(pokemon);
 		
@@ -45,7 +46,7 @@ public class TrainerTester {
 		// set up
 		Player player = new Player("Lucas");
 		Trainer trainer = player.getTrainer();
-		Pokemon pokemon = new Pokemon("Pikachu");
+		Pokemon pokemon = new Pokemon("Pikachu", Type.NotYetImplemented, 0,0,0,0,0,0);
 
 		trainer.addPokemonToParty(pokemon);
 

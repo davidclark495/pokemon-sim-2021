@@ -14,7 +14,7 @@ Changes since last commit:
 	- inner classes in Pokemon.java 
 		(PersistentStatBlock, InBattleTempStatBlock, RewardStatBlock)
 - Modified Classes
-	- Pokemon.java (more to do with StatBlocks, battles)
+	- Pokemon.java (more to do with StatBlocks, battles, mult. types)
 	- Pokemon.StatBlock (broken-up into other blocks, + more in-depth functionality)
 - New Files
 	- res/AllPokemon.xml (can be read to produce the PokemonList.java data)
